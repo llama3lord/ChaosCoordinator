@@ -8,11 +8,11 @@ import { INVALID_REQUEST } from "../constants/errors.constants";
 import createHttpError from "http-errors";
 class BaseEndpoint {
   private readonly extensions = new Map<string, string>([
-    ["dev", ".js"],
-    ["prod", ".ts"],
+    ["dev", ".ts"],
+    ["prod", ".js"],
   ]);
   public constructor() {}
-  public get(req: Request, res: Response, next: NextFunction) {
+  public get(req: Request, res: Response, next: NextFunction): any {
     return res
       .status(400)
       .send(
@@ -23,7 +23,7 @@ class BaseEndpoint {
         ),
       );
   }
-  public post(req: Request, res: Response, next: NextFunction) {
+  public post(req: Request, res: Response, next: NextFunction): any {
     return res
       .status(400)
       .send(
@@ -34,7 +34,7 @@ class BaseEndpoint {
         ),
       );
   }
-  public put(req: Request, res: Response, next: NextFunction) {
+  public put(req: Request, res: Response, next: NextFunction): any {
     return res
       .status(400)
       .send(
@@ -45,7 +45,7 @@ class BaseEndpoint {
         ),
       );
   }
-  public delete(req: Request, res: Response, next: NextFunction) {
+  public delete(req: Request, res: Response, next: NextFunction): any {
     return res
       .status(400)
       .send(

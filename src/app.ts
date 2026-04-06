@@ -5,10 +5,7 @@ import router from './router';
 import loggerService from './services/logger.service';
 const app = express();
 app.disable("x-powered-by")
-app.use(cors({
-    origin: '*',
-    credentials: true
-}));
+app.use(cors());
 app.get('/', (req, res) => {
     res.send('API is running');
 });
@@ -24,7 +21,7 @@ app.get("/health", (_, res) => {
     res.status(503).end("Server shutting down!");
 })
 app.use(express.json());
-app.use('/', router);
+app.use('*', router);
 app.use((req: Request, res: Response) => {
     res.status(400).send({
         error: {
