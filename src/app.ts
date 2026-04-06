@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
-import cors from 'cors';
+import cors, { CorsOptions } from 'cors';
 
 import createHttpError from 'http-errors';
 import router from './router';
@@ -8,9 +8,16 @@ import loggerService from './services/logger.service';
 const app = express();
 app.disable("x-powered-by")
 app.use(cors())
-app.use(cors({ credentials: true, origin: '*' }));
+const corsOptions: CorsOptions = {
+    origin: ['http://localhost:3000', 'https://address.nerdstacks.org/'],
+    methods: ['GET', 'POST'],
+    // allowedHeaders: ['Content-type', 'Authorization'],
+    credentials: true,
+}
+app.use(cors(corsOptions));
 
 app.locals.HEALTH_CHECK_ENABLED = true;
+
 app.get("/health", (_, res) => {
     if (app.locals.HEALTH_CHECK_ENABLED) {
         res.end("OK\n");
@@ -21,18 +28,22 @@ app.get("/health", (_, res) => {
 })
 
 app.use(express.json());
-app.use('*', router);
+app.use('/', router);
 
 app.use(async (req, res: Response, next: NextFunction) => {
+    console.log("Path: " + req.baseUrl);
     next(createHttpError.BadRequest());
 });
 
 app.use(async (err: any, req: Request, res: Response, next: NextFunction) => {
     loggerService.error({ message: err.message, path: req.path }).flush();
-    res.status(500).send({
+    
+    const status = err.status || 500
+    
+    res.status(status).send({
         error: {
-            status: 500,
-            message: "Internal Error",
+            status: status,
+            message: err.message || "Internal Error",
         }
     });
 });

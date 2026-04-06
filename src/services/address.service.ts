@@ -1,7 +1,7 @@
 import loggerService from "./logger.service";
 
 class AddressService {
-    private static fetchUrl = 'http://address.nerdstacks.org:3000/';
+    private static fetchUrl = 'https://address.nerdstacks.org/';
 
     constructor() { }
 
@@ -10,7 +10,7 @@ class AddressService {
             this.request(addressRequest)
                 .then((response) => {
                     resolve({
-                        "count": response.size()
+                        "count": response.length()
                     });
                 })
                 .catch((err) => {

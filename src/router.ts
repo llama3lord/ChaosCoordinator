@@ -5,7 +5,10 @@ import { ENV } from './constants/environment-vars.constants';
 
 const router = express.Router();
 
+//console.log("Did it goes through here router?"); //yes, before the error msg/get request
+
 router.get('*', (req: Request, res: Response, next: NextFunction) => {
+    console.log("hello router get method");
     (require(getEndpointControllerPath(req))).getRoute(req, res, next);
 });
 
@@ -22,11 +25,15 @@ router.delete('*', (req: Request, res: Response, next: NextFunction) => {
 });
 
 function getEndpointControllerPath(req: Request): string {
-    const paths = req.baseUrl.split('/');
+    // const paths = req.baseUrl.split('/');
+
+    const endpoint = req.baseUrl.split('/').pop();
+
 
     const ext = (ENV === 'dev') ? 'ts' : 'js';
-    const route = `${__dirname}/endpoints/${paths[1]}.endpoint.${ext}`;
-    if (paths.length === 1 || !fs.existsSync(route) || paths[1] == 'base') {
+    const route = `${__dirname}/endpoints/${endpoint}.endpoint.${ext}`;
+        
+    if (!endpoint || !fs.existsSync(route) || endpoint == 'base') {
         throw new createHttpError.BadRequest();
     }
 
