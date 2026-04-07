@@ -8,7 +8,7 @@ import {
   RESPONSE_STATUS_FAIL,
   RESPONSE_EVENT_READ,
 } from "../constants/generic.constants";
-// hi
+
 class AddressEndpoint extends baseEndpoint {
   public post(req: Request, res: Response, next: NextFunction) {
     super.executeSubRoute(addressEndpoint, req, res, next);
