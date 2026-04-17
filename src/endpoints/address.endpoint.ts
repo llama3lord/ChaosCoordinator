@@ -7,7 +7,7 @@ import { RESPONSE_STATUS_OK, RESPONSE_STATUS_FAIL, RESPONSE_EVENT_READ } from '.
 
 class AddressEndpoint extends baseEndpoint {
     public post(req: Request, res: Response, next: NextFunction) {
-        super.executeSubRoute(addressEndpoint, req, res, next);
+        return super.executeSubRoute(addressEndpoint, req, res, next);
     }
 
     private count_post(req: Request, res: Response, next: NextFunction) {

@@ -1,7 +1,7 @@
 import loggerService from "./logger.service";
 
 class AddressService {
-    private static fetchUrl = 'http://address.nerdstacks.org:3000/';
+    private static fetchUrl = 'https://address.nerdstacks.org/';
 
     constructor() { }
 
@@ -10,7 +10,7 @@ class AddressService {
             this.request(addressRequest)
                 .then((response) => {
                     resolve({
-                        "count": response.size()
+                        "count": response.length
                     });
                 })
                 .catch((err) => {
@@ -23,6 +23,7 @@ class AddressService {
         return new Promise<any>(async (resolve, reject) => {
             fetch(AddressService.fetchUrl, {
                 method: "POST",
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(addressRequest.body)
             })
                 .then(async (response) => {
