@@ -59,6 +59,10 @@ class AddressService {
             .then((dist) => {
                 resolve({"KM" : dist[0], "M" : dist[1]});
             })
+            .catch((err) => {
+                    loggerService.error({ path: "/address/request", message: `${(err as Error).message}` }).flush();
+                    reject(err);
+            });
         });
     }
 
