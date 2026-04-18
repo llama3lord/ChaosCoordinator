@@ -1,51 +1,51 @@
 import express, { NextFunction, Request, Response } from 'express';
-import cors, { CorsOptions } from 'cors';
-
+import cors from 'cors';
 import createHttpError from 'http-errors';
 import router from './router';
 import loggerService from './services/logger.service';
-
+import addressService from './services/address.service';
 const app = express();
 app.disable("x-powered-by")
-app.use(cors())
-const corsOptions: CorsOptions = {
-    origin: ['http://localhost:3000', 'https://address.nerdstacks.org/'],
-    methods: ['GET', 'POST'],
-    // allowedHeaders: ['Content-type', 'Authorization'],
-    credentials: true,
-}
-app.use(cors(corsOptions));
-
+app.use(cors());
+app.get('/', (req, res) => {
+    res.send('API is running');
+});
+app.get('/favicon.ico', (req, res) => {
+    res.status(204).end(); // no content
+});
 app.locals.HEALTH_CHECK_ENABLED = true;
-
 app.get("/health", (_, res) => {
     if (app.locals.HEALTH_CHECK_ENABLED) {
         res.end("OK\n");
         return;
     }
-
     res.status(503).end("Server shutting down!");
 })
 
+// app.post("/distance", (_, res) => {
+//     addressService.distance();
+//     //res.end("Hello!");
+//     return;
+// })
+
 app.use(express.json());
-app.use('/', router);
-
-app.use(async (req, res: Response, next: NextFunction) => {
-    console.log("Path: " + req.baseUrl);
-    next(createHttpError.BadRequest());
+app.use('*', router);
+app.use((req: Request, res: Response) => {
+    res.status(400).send({
+        error: {
+            status: 400,
+            message: "Invalid Request"
+        }
+    });
 });
-
-app.use(async (err: any, req: Request, res: Response, next: NextFunction) => {
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     loggerService.error({ message: err.message, path: req.path }).flush();
-    
-    const status = err.status || 500
-    
+    const status = err.status || 500;
     res.status(status).send({
         error: {
-            status: status,
+            status,
             message: err.message || "Internal Error",
         }
     });
 });
-
 export default app;

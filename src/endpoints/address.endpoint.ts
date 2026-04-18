@@ -7,7 +7,7 @@ import { RESPONSE_STATUS_OK, RESPONSE_STATUS_FAIL, RESPONSE_EVENT_READ } from '.
 
 class AddressEndpoint extends baseEndpoint {
     public post(req: Request, res: Response, next: NextFunction) {
-        super.executeSubRoute(addressEndpoint, req, res, next);
+        return super.executeSubRoute(addressEndpoint, req, res, next);
     }
 
     private count_post(req: Request, res: Response, next: NextFunction) {
@@ -20,7 +20,19 @@ class AddressEndpoint extends baseEndpoint {
     }
 
     private request_post(req: Request, res: Response, next: NextFunction) {
+        //console.log("touch request func");
         addressService.request(req)
+            .then((response) => {
+                res.status(200).send(responseWrapper(RESPONSE_STATUS_OK, RESPONSE_EVENT_READ, response));
+            }).catch((err) => {
+                res.status(400).send(responseWrapper(RESPONSE_STATUS_FAIL, RESPONSE_EVENT_READ, err));
+            });
+    }
+
+    private distance_post(req: Request, res: Response, next: NextFunction){
+        //console.log("Touch distance func");
+
+        addressService.distance(req)
             .then((response) => {
                 res.status(200).send(responseWrapper(RESPONSE_STATUS_OK, RESPONSE_EVENT_READ, response));
             }).catch((err) => {
