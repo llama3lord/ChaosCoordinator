@@ -6,34 +6,41 @@ class AddressService {
     constructor() { }
 
     public async count(addressRequest?: any): Promise<any> {
-        return new Promise<any>(async (resolve, reject) => {
-            this.request(addressRequest)
-                .then((response) => {
-                    resolve({
-                        "count": response.length
-                    });
-                })
-                .catch((err) => {
-                    reject(err);
-                });
-        });
+        if (!addressRequest) {
+            loggerService.warning({ path: "AddressService.count", message: "User provided null or empty request" }).flush();
+            return { count: 0 };
+        }
+
+        try {
+            loggerService.info({ path: "AddressService.count", message: "Initiating address count transaction" }).flush();
+
+            const response = await this.request(addressRequest);
+
+            if (!response || !Array.isArray(response)) {
+                loggerService.warning({ path: "AddressService.count", message: "Upstream returned invalid or non-array data" }).flush();
+                return { count: 0 };
+            }
+
+            return { count: response.length };
+        } catch (err: any) {
+            loggerService.error({ path: "AddressService.count", message: `Unexpected failure: ${err.message}` }).flush();
+            throw new Error("Internal Service Error");
+        }
     }
 
     public async request(addressRequest?: any): Promise<any> {
-        return new Promise<any>(async (resolve, reject) => {
-            fetch(AddressService.fetchUrl, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(addressRequest.body)
-            })
-                .then(async (response) => {
-                    resolve(await response.json());
-                })
-                .catch((err) => {
-                    loggerService.error({ path: "/address/request", message: `${(err as Error).message}` }).flush();
-                    reject(err);
-                });
+        const res = await fetch(AddressService.fetchUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(addressRequest?.body || {}),
         });
+
+        if (!res.ok) {
+            loggerService.error({ path: "/address/request", message: `Upstream error: ${res.statusText}` }).flush();
+            throw new Error(`Upstream error: ${res.statusText}`);
+        }
+
+        return await res.json();
     }
 
     public async distance(addressRequest?: any): Promise<any> {
@@ -52,7 +59,7 @@ class AddressService {
                     resolve({ "KM": dist[0], "M": dist[1] });
                 })
                 .catch((err) => {
-                    loggerService.error({ path: "/address/request", message: `${(err as Error).message}` }).flush();
+                    loggerService.error({ path: "/address/distance", message: `${(err as Error).message}` }).flush();
                     reject(err);
                 });
         });
@@ -63,7 +70,7 @@ class AddressService {
             fetch(AddressService.fetchUrl, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(addressRequest.body)
+                body: JSON.stringify(addressRequest?.body || {})
             })
                 .then(async (response) => {
                     resolve(await response.json());

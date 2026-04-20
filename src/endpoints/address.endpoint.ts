@@ -1,9 +1,13 @@
-import { NextFunction, Request, Response } from 'express';
-import baseEndpoint from './base.endpoint';
-import addressService from '../services/address.service';
-import responseWrapper from '../services/response.service';
+import { NextFunction, Request, Response } from "express";
+import baseEndpoint from "./base.endpoint";
+import addressService from "../services/address.service";
+import responseWrapper from "../services/response.service";
 
-import { RESPONSE_STATUS_OK, RESPONSE_STATUS_FAIL, RESPONSE_EVENT_READ } from '../constants/generic.constants';
+import {
+    RESPONSE_STATUS_OK,
+    RESPONSE_STATUS_FAIL,
+    RESPONSE_EVENT_READ,
+} from "../constants/generic.constants";
 
 class AddressEndpoint extends baseEndpoint {
     public post(req: Request, res: Response, next: NextFunction) {
