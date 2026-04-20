@@ -6,6 +6,7 @@ import {
 } from "../constants/generic.constants";
 import { INVALID_REQUEST } from "../constants/errors.constants";
 import createHttpError from "http-errors";
+<<<<<<< HEAD
 class BaseEndpoint {
   private readonly extensions = new Map<string, string>([
     ["dev", ".ts"],
@@ -13,6 +14,18 @@ class BaseEndpoint {
   ]);
   public constructor() {}
   public get(req: Request, res: Response, next: NextFunction): any {
+=======
+
+class BaseEndpoint {
+  private readonly extensions = new Map<string, string>([
+    ["dev", ".js"],
+    ["prod", ".ts"],
+  ]);
+
+  public constructor() {}
+
+  public get(req: Request, res: Response, next: NextFunction) {
+>>>>>>> origin/zhijun
     return res
       .status(400)
       .send(
@@ -23,7 +36,12 @@ class BaseEndpoint {
         ),
       );
   }
+<<<<<<< HEAD
   public post(req: Request, res: Response, next: NextFunction): any {
+=======
+
+  public post(req: Request, res: Response, next: NextFunction) {
+>>>>>>> origin/zhijun
     return res
       .status(400)
       .send(
@@ -34,7 +52,12 @@ class BaseEndpoint {
         ),
       );
   }
+<<<<<<< HEAD
   public put(req: Request, res: Response, next: NextFunction): any {
+=======
+
+  public put(req: Request, res: Response, next: NextFunction) {
+>>>>>>> origin/zhijun
     return res
       .status(400)
       .send(
@@ -45,7 +68,12 @@ class BaseEndpoint {
         ),
       );
   }
+<<<<<<< HEAD
   public delete(req: Request, res: Response, next: NextFunction): any {
+=======
+
+  public delete(req: Request, res: Response, next: NextFunction) {
+>>>>>>> origin/zhijun
     return res
       .status(400)
       .send(
@@ -56,6 +84,10 @@ class BaseEndpoint {
         ),
       );
   }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/zhijun
   public executeSubRoute(
     endPointMethod: any,
     req: Request,
@@ -63,6 +95,10 @@ class BaseEndpoint {
     next: NextFunction,
   ) {
     let subRoute = req.originalUrl.split("/")[2];
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/zhijun
     if (!subRoute) {
       return res
         .status(400)
@@ -74,8 +110,16 @@ class BaseEndpoint {
           ),
         );
     }
+<<<<<<< HEAD
     subRoute = `${subRoute}_${req.method.toLowerCase()}`;
     const temp = endPointMethod[subRoute as keyof typeof endPointMethod];
+=======
+
+    subRoute = `${subRoute}_${req.method.toLowerCase()}`;
+
+    const temp = endPointMethod[subRoute as keyof typeof endPointMethod];
+
+>>>>>>> origin/zhijun
     if (!temp) {
       return res
         .status(400)
@@ -87,7 +131,16 @@ class BaseEndpoint {
           ),
         );
     }
+<<<<<<< HEAD
     temp.call(endPointMethod, req, res, next);
   }
 }
 export default BaseEndpoint;
+=======
+
+    temp.call(endPointMethod, req, res, next);
+  }
+}
+
+export default BaseEndpoint;
+>>>>>>> origin/zhijun

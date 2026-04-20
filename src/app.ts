@@ -6,6 +6,7 @@ import loggerService from './services/logger.service';
 import addressService from './services/address.service';
 const app = express();
 app.disable("x-powered-by")
+<<<<<<< HEAD
 app.use(cors());
 app.get('/', (req, res) => {
     res.send('API is running');
@@ -13,6 +14,21 @@ app.get('/', (req, res) => {
 app.get('/favicon.ico', (req, res) => {
     res.status(204).end(); // no content
 });
+=======
+app.use(cors({
+    origin: '*',
+    credentials: true
+}));
+
+app.get('/', (req, res) => {
+    res.send('API is running');
+});
+
+app.get('/favicon.ico', (req, res) => {
+    res.status(204).end(); // no content
+});
+
+>>>>>>> origin/zhijun
 app.locals.HEALTH_CHECK_ENABLED = true;
 app.get("/health", (_, res) => {
     if (app.locals.HEALTH_CHECK_ENABLED) {
@@ -29,6 +45,7 @@ app.get("/health", (_, res) => {
 // })
 
 app.use(express.json());
+<<<<<<< HEAD
 app.use('*', router);
 app.use((req: Request, res: Response) => {
     res.status(400).send({
@@ -43,6 +60,26 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     const status = err.status || 500;
     res.status(status).send({
         error: {
+=======
+app.use('/', router);
+
+app.use((req: Request, res: Response) => {
+    res.status(400).send({
+        error: {
+            status: 400,
+            message: "Invalid Request"
+        }
+    });
+});
+
+app.use((err: any, req: Request, res: Response, next: NextFunction) => {
+    loggerService.error({ message: err.message, path: req.path }).flush();
+
+    const status = err.status || 500;
+
+    res.status(status).send({
+        error: {
+>>>>>>> origin/zhijun
             status,
             message: err.message || "Internal Error",
         }
