@@ -1,5 +1,4 @@
 import loggerService from "./logger.service";
-import fetch from 'node-fetch';
 
 class ZipcodeService {
   private static fetchUrl = "https://ischool.gccis.rit.edu/addresses/";
@@ -11,7 +10,7 @@ class ZipcodeService {
   public async getCityByZipcode(requestBody: any): Promise<string> {
     // Null / missing check
     if (!requestBody || requestBody.zipcode === undefined || requestBody.zipcode === null) {
-      loggerService.warn({
+      loggerService.warning({
         path: "ZipcodeService.getCityByZipcode",
         message: "User provided null or missing zipcode"
       }).flush();
@@ -21,7 +20,7 @@ class ZipcodeService {
     const zipcode = String(requestBody.zipcode).trim();
 
     if (zipcode === "") {
-      loggerService.warn({
+      loggerService.warning({
         path: "ZipcodeService.getCityByZipcode",
         message: "User provided empty zipcode string"
       }).flush();
@@ -32,7 +31,7 @@ class ZipcodeService {
     const allowedKeys = ["zipcode"];
     const extraKeys = Object.keys(requestBody).filter(k => !allowedKeys.includes(k));
     if (extraKeys.length > 0) {
-      loggerService.warn({
+      loggerService.warning({
         path: "ZipcodeService.getCityByZipcode",
         message: `User provided extra fields that will be ignored: ${extraKeys.join(", ")}`
       }).flush();
@@ -62,7 +61,7 @@ class ZipcodeService {
 
       // Upstream returned bad/empty data
       if (!data || !Array.isArray(data) || data.length === 0) {
-        loggerService.warn({
+        loggerService.warning({
           path: "ZipcodeService.getCityByZipcode",
           message: `No results returned for zipcode: ${zipcode}`
         }).flush();
@@ -72,7 +71,7 @@ class ZipcodeService {
       const city = data[0]?.city;
 
       if (!city) {
-        loggerService.warn({
+        loggerService.warning({
           path: "ZipcodeService.getCityByZipcode",
           message: `Upstream result missing city field for zipcode: ${zipcode}`
         }).flush();
