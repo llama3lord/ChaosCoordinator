@@ -7,6 +7,7 @@ import {
 import { INVALID_REQUEST } from "../constants/errors.constants";
 import createHttpError from "http-errors";
 class BaseEndpoint {
+
   private readonly extensions = new Map<string, string>([
     ["dev", ".ts"],
     ["prod", ".js"],
@@ -56,6 +57,13 @@ class BaseEndpoint {
         ),
       );
   }
+
+  /**
+   * This code dynamically finds the correct function based on the route
+   * and HTTP method. If the function doesn't exit then it returns 400 error.
+   * If it does exist, it executes that function and passes in the request,
+   * response, and next middleware.
+   */
   public executeSubRoute(
     endPointMethod: any,
     req: Request,
@@ -74,7 +82,11 @@ class BaseEndpoint {
           ),
         );
     }
+    //combine the original url (from splitted method) with the request's method (get, post, put, delete)
+    //which turned into like users_get or login_post
     subRoute = `${subRoute}_${req.method.toLowerCase()}`;
+    //The meaning of these codes below tell you that it find the functiont that matches this 
+    //route + HTTP method (thus why you see the subroutes)
     const temp = endPointMethod[subRoute as keyof typeof endPointMethod];
     if (!temp) {
       return res
@@ -87,6 +99,7 @@ class BaseEndpoint {
           ),
         );
     }
+    //pass in the request/response
     temp.call(endPointMethod, req, res, next);
   }
 }
