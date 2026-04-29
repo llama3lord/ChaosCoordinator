@@ -1,9 +1,13 @@
-import { NextFunction, Request, Response } from 'express';
-import baseEndpoint from './base.endpoint';
-import addressService from '../services/address.service';
-import responseWrapper from '../services/response.service';
+import { NextFunction, Request, Response } from "express";
+import baseEndpoint from "./base.endpoint";
+import addressService from "../services/address.service";
+import responseWrapper from "../services/response.service";
 
-import { RESPONSE_STATUS_OK, RESPONSE_STATUS_FAIL, RESPONSE_EVENT_READ } from '../constants/generic.constants';
+import {
+    RESPONSE_STATUS_OK,
+    RESPONSE_STATUS_FAIL,
+    RESPONSE_EVENT_READ,
+} from "../constants/generic.constants";
 
 class AddressEndpoint extends baseEndpoint {
     public post(req: Request, res: Response, next: NextFunction) {
@@ -21,6 +25,15 @@ class AddressEndpoint extends baseEndpoint {
 
     private request_post(req: Request, res: Response, next: NextFunction) {
         addressService.request(req)
+            .then((response) => {
+                res.status(200).send(responseWrapper(RESPONSE_STATUS_OK, RESPONSE_EVENT_READ, response));
+            }).catch((err) => {
+                res.status(400).send(responseWrapper(RESPONSE_STATUS_FAIL, RESPONSE_EVENT_READ, err));
+            });
+    }
+
+    private distance_post(req: Request, res: Response, next: NextFunction) {
+        addressService.distance(req)
             .then((response) => {
                 res.status(200).send(responseWrapper(RESPONSE_STATUS_OK, RESPONSE_EVENT_READ, response));
             }).catch((err) => {

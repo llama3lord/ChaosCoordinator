@@ -10,7 +10,11 @@ router.get('*', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.post('*', (req: Request, res: Response, next: NextFunction) => {
-    (require(getEndpointControllerPath(req))).postRoute(req, res, next);
+    try {
+        (require(getEndpointControllerPath(req))).postRoute(req, res, next);
+    } catch (err) {
+        res.status(400).send({ error: { status: 400, message: "Invalid Request" } });
+    }
 });
 
 router.put('*', (req: Request, res: Response, next: NextFunction) => {
@@ -22,11 +26,11 @@ router.delete('*', (req: Request, res: Response, next: NextFunction) => {
 });
 
 function getEndpointControllerPath(req: Request): string {
-    const paths = req.baseUrl.split('/');
-
+    const paths = req.path.split('/');
     const ext = (ENV === 'dev') ? 'ts' : 'js';
     const route = `${__dirname}/endpoints/${paths[1]}.endpoint.${ext}`;
-    if (paths.length === 1 || !fs.existsSync(route) || paths[1] == 'base') {
+
+    if (paths.length < 2 || !fs.existsSync(route) || paths[1] == 'base') {
         throw new createHttpError.BadRequest();
     }
 
