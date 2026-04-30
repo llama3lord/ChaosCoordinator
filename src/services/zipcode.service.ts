@@ -19,6 +19,7 @@ class ZipcodeService {
 
     const zipcode = String(requestBody.zipcode).trim();
 
+    // log a warning and throw an error if the zipcode is empty
     if (zipcode === "") {
       loggerService.warning({
         path: "ZipcodeService.getCityByZipcode",
@@ -49,6 +50,7 @@ class ZipcodeService {
         body: JSON.stringify({ zipcode })  // only send zipcode, nothing else
       });
 
+      // Upstream response is NOT OK
       if (!response.ok) {
         loggerService.error({
           path: "ZipcodeService.getCityByZipcode",

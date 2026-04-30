@@ -5,6 +5,11 @@ class AddressService {
 
     constructor() { }
 
+    /**
+     * counts the number of addresses from a request object
+     * logs a warning if the request is missing or invalid
+     * returns a count of the addresses
+     */
     public async count(addressRequest?: any): Promise<any> {
         if (!addressRequest) {
             loggerService.warning({ path: "AddressService.count", message: "User provided null or empty request" }).flush();
@@ -28,6 +33,11 @@ class AddressService {
         }
     }
 
+    /**
+     * sends a POST request to the provided address service
+     * logs and throws an error if the response is not ok
+     * returns the json response from the request
+     */
     public async request(addressRequest?: any): Promise<any> {
         const res = await fetch(AddressService.fetchUrl, {
             method: "POST",
@@ -43,6 +53,10 @@ class AddressService {
         return await res.json();
     }
 
+    /**
+     * calculates the distance between two address coordinates
+     * returns an array containing the distance in both kilometers and miles
+     */
     public async distance(addressRequest?: any): Promise<any> {
         return new Promise<any>(async (resolve, reject) => {
             this.distUrl(addressRequest)
@@ -65,6 +79,9 @@ class AddressService {
         });
     }
 
+    /**
+     * sends a POST request to the address.nerdstacks.org service and returns the json response
+     */
     public async distUrl(addressRequest?: any): Promise<any> {
         return new Promise<any>(async (resolve, reject) => {
             fetch(AddressService.fetchUrl, {
@@ -82,6 +99,9 @@ class AddressService {
         });
     }
 
+    /**
+     * calculates the distance between two lat/lon coordinates on the earth and returns the result
+     */
     private getDistance(lat1: string, lon1: string, lat2: string, lon2: string) {
         const toRadians = (degrees: number) => {
             return degrees * (Math.PI / 180);
