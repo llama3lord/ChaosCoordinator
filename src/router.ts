@@ -25,6 +25,10 @@ router.delete('*', (req: Request, res: Response, next: NextFunction) => {
     (require(getEndpointControllerPath(req))).deleteRoute(req, res, next);
 });
 
+/**
+ * returns the string path to an endpoint 
+ * throws an error if the requests path is too short or if the endpoint doesn't exist or if the endpoint starts with base
+ */
 function getEndpointControllerPath(req: Request): string {
     const paths = req.path.split('/');
     const ext = (ENV === 'dev') ? 'ts' : 'js';

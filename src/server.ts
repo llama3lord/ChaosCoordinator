@@ -7,6 +7,11 @@ const server = app.listen(SERVER_PORT || 5000, () => {
     console.info("==========================================================");
 });
 
+
+/**
+ * This function gracefully exits the program
+ * disables health checks, outputs the signal received, stops taking new requests, and then shuts down the program
+ */
 function gracefulShutdownHandler(signal: NodeJS.Signals) {
     const GRACEFUL_SHUTDOWN_TIME = 15000;
     app.locals.HEALTH_CHECK_ENABLED = false;
