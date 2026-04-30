@@ -8,6 +8,10 @@ import {
   RESPONSE_EVENT_READ,
 } from "../constants/generic.constants";
 
+/**
+ * This function is very similar to the AddressEndpoint function
+ * from address.endpoint.ts file.
+ */
 class ZipcodeEndpoint extends baseEndpoint {
     public post(req: Request, res: Response, next: NextFunction) {
         return super.executeSubRoute(zipcodeEndpoint, req, res, next) as Response;

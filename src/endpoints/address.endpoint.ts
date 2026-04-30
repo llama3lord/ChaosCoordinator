@@ -3,16 +3,28 @@ import baseEndpoint from "./base.endpoint";
 import addressService from "../services/address.service";
 import responseWrapper from "../services/response.service";
 
+//Pull the constants variable from the generic file in constants folder.
 import {
     RESPONSE_STATUS_OK,
     RESPONSE_STATUS_FAIL,
     RESPONSE_EVENT_READ,
 } from "../constants/generic.constants";
 
+/**
+ * This class have post functions that allow the application to
+ * return the JSON result from post request.
+ * Without these functions, you will receive an invalid request/failed status.
+ */
 class AddressEndpoint extends baseEndpoint {
     public post(req: Request, res: Response, next: NextFunction) {
         return super.executeSubRoute(addressEndpoint, req, res, next);
     }
+
+    /**
+     * Each post functions below allow you to request the specific url
+     * to return the json result (200) or return error (400) if issues occurs
+     * (e.g. "../address/count", "../address/request", "../address/distance")
+     */
 
     private count_post(req: Request, res: Response, next: NextFunction) {
         addressService.count(req)
@@ -23,6 +35,7 @@ class AddressEndpoint extends baseEndpoint {
             });
     }
 
+    
     private request_post(req: Request, res: Response, next: NextFunction) {
         addressService.request(req)
             .then((response) => {
